@@ -15,7 +15,9 @@ const { pageTitle } = Astro.props;
   <body class="bg-background w-full flex justify-center px-5 lg:px-0 text-main">
     <div class="w-full lg:w-2/3 flex flex-col gap-y-8">
       <Header />
-      <slot />
+      <div class="py-5">
+        <slot />
+      </div>
     </div>
   </body>
 </html>
