@@ -3,7 +3,9 @@ const { tag } = Astro.props;
 ---
 
 <li
-  class="border-main rounded-2xl px-6 py-1 border-2 text-sm uppercase hover:bg-main hover:text-white transition-colors"
+  class="border-main rounded-2xl px-6 lg:py-1 border-2 text-sm uppercase hover:bg-main hover:text-white transition-colors flex truncate"
 >
-  {tag}
+  <span>
+    {tag}
+  </span>
 </li>
