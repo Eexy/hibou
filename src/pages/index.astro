@@ -1,7 +1,10 @@
 ---
-import BaseLayout from './layouts/base-layout.astro';
+import PostList from '../components/post-list.astro';
+import BaseLayout from '../layouts/base-layout.astro';
 
 const pageTitle = 'Home';
 ---
 
-<BaseLayout pageTitle={pageTitle} />
+<BaseLayout pageTitle={pageTitle}>
+  <PostList />
+</BaseLayout>

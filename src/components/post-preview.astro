@@ -1,0 +1,13 @@
+---
+import TagList from './tag-list.astro';
+const { title, tags, desc, date, url } = Astro.props;
+---
+
+<div class="flex w-full gap-x-8 text-main">
+  <div class="leading-4">{date}</div>
+  <a href={url} class="flex flex-col gap-y-10 flex-wrap">
+    <h2 class="text-4xl leading-3 font-medium">{title}</h2>
+    {desc && <p class="line-clamp-5">{desc}</p>}
+    <TagList tags={tags} />
+  </a>
+</div>
