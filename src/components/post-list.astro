@@ -4,7 +4,7 @@ import PostPreview from './post-preview.astro';
 const posts = await Astro.glob('../pages/posts/*.mdx');
 ---
 
-<div class="post-list flex flex-col gap-y-16 py-5">
+<div class="post-list flex flex-col gap-y-16">
   {
     posts.map((post) => (
       <PostPreview
