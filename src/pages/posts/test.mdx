@@ -1,5 +1,5 @@
 ---
-layout: "../../layouts/base-layout.astro"
+layout: '../../layouts/base-layout.astro'
 title: 'My First Blog Post'
 pubDate: 2022-07-01
 description: 'This is the first post of my new Astro blog.'
@@ -8,10 +8,14 @@ image:
   url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg'
   alt: 'The Astro logo with the word One.'
 tags: ['astro', 'blogging', 'learning in public']
-desc: "lorem"
+desc: 'lorem'
 ---
 
+import TagList from '../../components/tag-list.astro';
+
 # My First Blog Post
+
+<TagList tags={frontmatter.tags} />
 
 Published on: 2022-07-01
 
