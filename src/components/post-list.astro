@@ -9,6 +9,7 @@ const posts = await Astro.glob('../pages/posts/*.md');
     posts.map((post) => (
       <PostPreview
         url={post.url}
+        desc={post.frontmatter.desc}
         title={post.frontmatter.title}
         tags={post.frontmatter.tags}
         date={post.frontmatter.pubDate.slice(0, 10)}
