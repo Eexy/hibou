@@ -17,3 +17,7 @@ h4 {
 p {
   @apply font-serif text-xl
 }
+
+.astro-code{
+  @apply p-3 rounded 
+}
