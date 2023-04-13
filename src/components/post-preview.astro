@@ -12,6 +12,6 @@ const { title, tags, desc, date, url } = Astro.props;
       <h2 class="text-4xl leading-3 font-medium">{title}</h2>
       {desc && <p class="line-clamp-5">{desc}</p>}
     </a>
-    <TagList tags={tags} />
+    {tags && <TagList tags={tags} />}
   </div>
 </div>
