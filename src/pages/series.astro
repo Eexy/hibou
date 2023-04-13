@@ -1,7 +1,22 @@
 ---
+import Serie from '../components/serie.astro';
 import BaseLayout from '../layouts/base-layout.astro';
+
+const posts = await Astro.glob('../pages/posts/*.mdx');
+const seriesPosts = posts.filter((post) => post.frontmatter.serie);
+const series: Record<string, any> = {};
+
+seriesPosts.forEach((post) => {
+  if (Array.isArray(series[post.frontmatter.serie])) {
+    series[post.frontmatter.serie].push(post);
+  } else {
+    series[post.frontmatter.serie] = [post];
+  }
+});
 
 const pageTitle = 'Series';
 ---
 
-<BaseLayout pageTitle={pageTitle} />
+<BaseLayout pageTitle={pageTitle}>
+  {Object.keys(series).map((key: string) => <Serie serie={key} posts={series[key]}/>)}
+</BaseLayout>

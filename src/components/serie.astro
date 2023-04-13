@@ -1,0 +1,19 @@
+---
+const { serie, posts } = Astro.props;
+const sortedPosts = posts.sort((a: any, b: any) => a.part - b.part);
+---
+
+<div>
+  <h3>{serie}</h3>
+  <ul class="py-5 text-xl">
+    {
+      sortedPosts.map((post: any, i: number) => (
+        <li>
+          <a href={post.url}>
+            {sortedPosts.length - i} - {post.frontmatter.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

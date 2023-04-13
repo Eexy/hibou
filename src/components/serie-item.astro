@@ -1,0 +1,10 @@
+---
+const { items } = Astro.props;
+const sortedItems = items
+  .filter((item: any) => item.frontmatter.pubDate)
+  .sort(
+    (a: any, b: any) =>
+      new Date(a.frontmatter.pubDate).getTime() -
+      new Date(b.frontmatter.pubDate).getTime()
+  );
+---
