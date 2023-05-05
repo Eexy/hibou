@@ -2,11 +2,12 @@
 import PostPreview from './post-preview.astro';
 
 const posts = await Astro.glob('../pages/posts/*.mdx');
+const filteredPost = posts.filter((post) => !post.frontmatter.draft);
 ---
 
 <div class="post-list flex flex-col gap-y-16">
   {
-    posts.map((post) => (
+    filteredPost.map((post) => (
       <PostPreview
         url={post.url}
         desc={post.frontmatter.desc}
