@@ -1,0 +1,359 @@
+---
+layout: '../../layouts/post-layout.astro'
+title: 'The good way to create and publish NPM package'
+pubDate: 2023-05-05
+description: 'An article providing the good way to develop an NPM package in 2023'
+author: 'Isai'
+tags: ['JS', 'TS', 'NPM']
+---
+
+Like a lot of developers there will be a time in your life when one of your friends will contact you because he has an idea of business. He has no money to pay you but don't worry you will have a share in the company like maybe 10%. Then there will be a moment in your life when you will have an idea and decide to create a package to help the community. For the first case I can't help you but for the other you may read this article before starting. In this article I will show you what are the good practices to implement during the development of a package.
+
+Throughout the article I will show every step with a test package which will be very simple : it will only be a package who checks if a number is even. The function look like this
+
+```js
+function isEven(x) {
+  return x % 2 === 0;
+}
+
+module.exports = { isEven };
+```
+
+## Check if it’s not already existing
+
+Before starting to develop your package here is a step that you must do : check if it's not already existing. It's an important step because it can make you gain time and avoid frustration. Imagine you on a package and during the development or at the end after hours of work and then you find at the last moment that there is already a fully developed package that does what you want. It would be useless to create another package to do the same thing. It will only pollute the repository. Furthermore if the package already existed for a long time it had time to be used and tested by the different users. So you can be sure the package is stable and can be used without fear in production.
+
+But because there is always a but. It can be useful to create another package even if there is one already existing. I can think of 2 cases where it could be useful. The first case is when you want to learn something. Sometimes you want to learn a new technology like TS. For example it can be useful to try to replicate an already existing package to learn better and faster. If you are in that case I advise you either to not publish the package or to warn the user that it is for educational purposes and it's not meant to be used in production.
+
+Another case where it can be useful to develop the same package is because the one created was abandoned by its creator,it's been a long time since the last update or there is a lack of big features. As an example it can be for adding Typescript. If you are in that case you must think before your start because you have 2 possibles choices : either start a new package from scratch or make a fork
+
+Now that we have make the first step is time to see the good practice to develop and publish a package
+
+NB : It already exist a package that check if a number is even and the number of download is stunning
+
+## Use Typescript
+
+We have checked that no package exists so we can start developing the package. The first good step and I think it the best step to implement it is to use Typescript.
+
+For the new one in the world of Javascript and don't know what Typescript is. I strongly suggest you watch the video of Fireship on it. It’s a good introduction. Here is the link : https://www.youtube.com/watch?v=ahCwqrYpIuM
+
+Typescript will help you reduce the number of possible undefined behaviors and make your code more stable. Furthermore TS will help with code readability.
+Today everything that is meant to be at a professional level is written in TS. More and More companies like Airbnb, google or facebook use TS. It also touches smaller companies and solo devs in their personal projects.
+Now every package that wants to be used by the masses should use TS.
+
+To install TS you can just install it like a package
+
+```
+npm i typescript
+```
+
+After TS have been installed you can initialized like it
+
+```
+npx tsc --init
+```
+
+Now that we have TS running we can select which rule to activate or not which is one of the big strengths of TS. If you are new to this you should watch the doc who explains all the rules. You can find it here : https://www.typescriptlang.org/tsconfig
+Furthermore you can find some explanations directly in the tsconfig file that have been automatically created.
+If you don’t want to start explorings the rules here is the config file that I mostly use for my projects
+
+```typescript
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    /* Modules */
+    "module": "commonjs" /* Specify what module code is generated. */,
+    /* Emit */
+    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    "declaration": true,
+    /* Type Checking */
+    "strict": true /* Enable all strict type-checking options. */,
+    "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
+    "strictNullChecks": true /* When type checking, take into account 'null' and 'undefined'. */,
+    "strictFunctionTypes": true /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */,
+    // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
+    "strictPropertyInitialization": true /* Check for class properties that are declared but not set in the constructor. */,
+    // "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
+    "useUnknownInCatchVariables": true /* Default catch clause variables as 'unknown' instead of 'any'. */,
+    "alwaysStrict": true /* Ensure 'use strict' is always emitted. */,
+    "noUnusedLocals": true /* Enable error reporting when local variables aren't read. */,
+    "noUnusedParameters": true /* Raise an error when a function parameter isn't read. */,
+    // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
+    "noImplicitReturns": true /* Enable error reporting for codepaths that do not explicitly return in a function. */,
+    "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */,
+    // "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
+    "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an override modifier. */,
+    "noPropertyAccessFromIndexSignature": true /* Enforces using indexed accessors for keys declared using an indexed type. */,
+    // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
+    // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
+    /* Completeness */
+    // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  }
+}
+```
+
+Let’s see the modification we have to do. The first thing to do is to change the index.js to index.ts. Once it’s done there will be errors in our code. We see an error in our function arguments. The error says that `x is of type any` and the second error is on the line with our `module.exports`. The second error is easy to fix : we just need to install the node types to do that it’s the same way as to install a package
+
+```
+npm i -D @types/node
+```
+
+Now for the first error we get it because TS doesn't know what the type of x is. We know that our function should work with numbers but in JS because there is no type-safety there will not be errors until runtime and impact our user. Except that now that we have TS and it warns you of the possible error to fix, here is the modification we have to do.
+Furthermore after that everything should work perfectly but if we want to simplify our code we could delete our `module.exports` and just export the function like this
+
+```typescript
+export function isEven(x: number) {
+  return x % 2 === 0;
+}
+```
+
+Finally if we pass our mouse on the function name we see that the return type has been correctly inferred. TS now that we return a boolean but if you want you can precise the return’s type but you're not forced to. Personally I prefer to be precise. I think it improves readability and it is a thing that I still have because I started my journey of developers with C.
+So at the end we get something like that.
+
+```typescript
+export function isEven(x: number): boolean {
+  return x % 2 === 0;
+}
+```
+
+We are almost done with this part. Because we use typescript when we compile the path to our entry point has changed so we need to modify it in our package.json. We also need to set where our types lives. To do that add thos 2 lines
+
+```json
+{
+  // ...package.json
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts"
+}
+```
+
+## Make tests
+
+The other good practice to implement during development is to make tests. Tests make your code more safe to update and more reliable.
+Another advantage to testing is that someone can read them and understand what your package does. Finally, the last advantage of making tests is that when other people participate in your project you can be sure that their code will not break everything before implementing their changes.
+
+Now that you know the advantages of testing let see the 2 types of tests
+
+- Unit tests
+- Integration tests (end-to-end test also called e2e test)
+
+Unit tests are small that focus on a very small portion of the code like a function. For example unit tests for our function isEven could look like this
+
+```typescript
+it('should return true on even number', () => {
+  expect(isEven(2)).toBe(true);
+});
+```
+
+Like I said, unit tests are designed to be simple and short. They should only test a function or a very small block of code.
+Integration tests exist to test the whole pipeline, to mimic how the users will interact with our system and be sure that everything is working together correctly. Not every project needs integration tests. Integration tests mostly exist on big or complex projects.
+For example if you write an API you would make integration tests that call endpoints and test that you get the expected responses.
+Our project is fairly simple so we don’t need that type of test.
+
+Now to write tests there exist multiple libraries who can do that. For the project I will use Vitest. One of the advantages of Vitest is that it can execute tests in typescript files without any configuration.So let's see how to install it, configure and run our test.
+
+For installing Vitest it’s easy. You just have to install it like any package :
+
+```
+npm i vitest
+```
+
+Now you just have to add this script to your package.json
+
+```json
+{
+  // ...package.json
+  {
+    // scripts
+    "test": "vitest run"
+  }
+}
+```
+
+After that you can write your test. You have two possible options for the file creation : either create your test file next to the module you want to test or you put it in a test folder. This test folder should have the same hierarchy as your src folder. I think those are two good approaches. Personally I tend to use the second approach most of the time.
+
+We write a little test that will look like this
+
+```typescript
+import { describe, expect, it } from 'vitest';
+import { isEven } from '../src';
+
+describe('isEven', () => {
+  it('should return true on even number', () => {
+    expect(isEven(2)).toBe(true);
+  });
+});
+```
+
+Now we can run the tests by using our test script like that
+
+```
+npm test
+```
+
+And we get that as a result. Everything is green, everything is perfect, we can move to the next step.
+
+## Automate the deployment
+
+Ok we have made all the good steps for developing our package and you can now publish it. You just have to create an account on npmjs.com, build the build script but don’t forget to test before and then use the command
+
+```
+npm run publish
+```
+
+See pretty easy ? It is easy to do all of the steps. The only problem is that we have to make it each time we want to make an update. If you know the package will never be updated you can stop the article here but if you want to learn a new thing or you know you will keep working on it you should stay a little more.
+
+To improve the whole pipeline we will use Github Actions (Link to github actions). Github Actions are actions that automatically start when something happens on the repo. For example we can start an action on each push.
+We will use github action to automatically publish the package on npm each time there is a push on the main branch.
+We use github action because there exist a full library of template actions made by the community so it very easy to set up
+
+To install github actions just go to the repo and click on the “Action” tabs. Once clicked you will see a full list of actions. Select the action named : “Publish Node.js Package”
+You will see a the package actions who look like this
+
+```yaml
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+```
+
+To accomplish what we want we have 2 things to do. The first thing is to modify it to only run on the main branch. The second thing to change is to remove the first block in jobs : the “build” jobs we don’t need.
+
+```yaml
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+```
+
+Now you can click on “start commit”. The github actions have been successfully created now but it’s not done yet. We have 2 things to do.
+The first thing to do is to set up the env variable. In the action file you can see it uses the secret `npm_token. To set up this secret go settings tabs then in the security panel you can see the “secret and variables”. Click on it and then click on “actions”. You are now on the page to set up your secret. Create a new secret called npm_token. Go to your npm account and generate a new Automate token.  
+Now that you have your secret click on “New repository token”. Define the name as npm_token and paste the value provided by npm and save it.
+
+We have done the first thing, now let's go do the last step. We need to create a “release” script in your package.json.
+This script has multiple things to do. It needs to do the test, compile to js and publish. The script will look like this
+
+```json
+{
+  // package.json
+  {
+    // scripts
+    "release": "npm test && npm run build && npm publish --access public"
+  }
+}
+```
+
+Now we can push all the changes on github. Go to the actions page and you will see your actions that have been automatically launched on the push.
+
+## Making a npmingore
+
+Ok so our package has finally been published but we still have small work to do. If you try to install your own package you will see that there are all of the source files which makes the package’s size bigger for nothing. Like git we can specify files that we don’t want to include by creating a file “.npmignore”
+The syntax in it is the same as gitignore. So we can start to specify which file we don't want
+
+```npmignore
+src/**/*
+tests/**/*
+.github
+tsconfig.json
+!dist
+```
+
+You could commit and push the package but you will get an error. You will get an error because you need to update the package version.
+You can see how npm versioning work here : [NPM versionning](https://docs.npmjs.com/about-semantic-versioning)
+
+In our case it’s just a small update about the gitignore so we just make a “patch”. Here is the command
+
+```
+npm version patch
+```
+
+## Add the missing infos
+
+Ok we are in the last part. We only have one more thing to do : add the missing infos for our package.
+I’m talking about a readme and the other information like a link to the repo, the package license and the author.
+For the readme you only have to add a markdown file called Readme in the root of your folder and that is all. Except that there is I think a good way to create a good readme.
+
+- For me a good readme should have those parts
+- What does the package
+- Why it’s have been created
+- How to install it
+- Example of how to use the package and maybe how to import it
+- A roadmap (optional)
+
+Once you have done with the readme you can add a link to the repo. For doing this you just have to add this line to your package.json
+
+```json
+{
+  // package.json
+  "repository": {
+    "type": "git",
+    "link": "link_to_repo"
+  }
+}
+```
+
+The final step to our package is simply to add a license. I suggest you add an MIT license. You can generate one via directly by github. To do that you can simply go to your repo and click on “Add a file”. From there in the filename use “LICENSE”;
+Github will automatically detect you want a license and it will propose to you to select one.
+Once is done you can commit your change. Now go to your package.json and modify or add this line
+
+```json
+{
+  // package.json
+  "license": "MIT"
+}
+```
+
+Congratulation you have created your package with good technique now you can rest until someone open an issue on github or be desperate because no one use it
