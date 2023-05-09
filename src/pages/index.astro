@@ -2,9 +2,12 @@
 import PostList from '../components/post-list.astro';
 import BaseLayout from '../layouts/base-layout.astro';
 
+const posts = await Astro.glob('../pages/posts/*.mdx');
+const filteredPost = posts.filter((post) => !post.frontmatter.draft);
+
 const pageTitle = 'Home';
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <PostList />
+  <PostList posts={filteredPost} />
 </BaseLayout>
