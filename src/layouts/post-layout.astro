@@ -1,16 +1,21 @@
 ---
 import TagList from '../components/tag-list.astro';
 import '../styles/main.scss';
+import '../styles/post.scss';
 import BaseLayout from './base-layout.astro';
 
 const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <h1>{frontmatter.title}</h1>
-  <div class="text-sm">
-    By {frontmatter.author}, {frontmatter.pubDate.slice(0, 10)}
-  </div>
-  <TagList tags={frontmatter.tags} />
-  <slot />
+  <main class="post">
+    <h1>{frontmatter.title}</h1>
+    <div class="text-sm">
+      By {frontmatter.author}, {frontmatter.pubDate.slice(0, 10)}
+    </div>
+    <TagList tags={frontmatter.tags} />
+    <section class="post-content">
+      <slot />
+    </section>
+  </main>
 </BaseLayout>

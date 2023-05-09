@@ -1,0 +1,25 @@
+.post-content {
+  h1, h2, h3, h4 {
+    @apply py-4
+  }
+  
+  ul {
+    @apply list-disc list-inside;
+  }
+
+  ol {
+    @apply list-decimal list-inside;
+  }
+
+  .astro-code {
+    @apply p-3 rounded;
+  }
+
+  a {
+    @apply underline italic;
+  }
+
+  p {
+    @apply py-3;
+  }
+}
