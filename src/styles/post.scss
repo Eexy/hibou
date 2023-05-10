@@ -1,8 +1,15 @@
-.post-content {
-  h1, h2, h3, h4 {
-    @apply py-4
+.post-header {
+  @apply flex flex-col gap-y-3 pb-3;
+}
+
+.post-body {
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply py-4;
   }
-  
+
   ul {
     @apply list-disc list-inside;
   }
